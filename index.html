@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LifeLine | Blood Donor Management</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Login screen -->
+  <section id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <div class="brand-mark"><i class="bi bi-droplet-fill"></i></div>
+      <p class="eyebrow mb-1">BLOOD DONOR MANAGEMENT SYSTEM</p>
+      <h1 class="h3 fw-bold mb-2">Welcome to LifeLine</h1>
+      <p class="text-secondary mb-4">A simple way to manage donor information.</p>
+      <div class="btn-group w-100 mb-4" role="group">
+        <button class="btn btn-danger" id="showLogin">Login</button>
+        <button class="btn btn-outline-danger" id="showRegister">Register</button>
+      </div>
+      <form id="loginForm">
+        <label class="form-label">Username</label>
+        <input class="form-control mb-3" id="loginUsername" required placeholder="Enter username">
+        <label class="form-label">Password</label>
+        <input class="form-control mb-3" id="loginPassword" type="password" required placeholder="Enter password">
+        <button class="btn btn-danger w-100 py-2" type="submit">Login <i class="bi bi-arrow-right ms-1"></i></button>
+        <p class="small text-secondary mt-3 mb-0">Demo login: <b>admin</b> / <b>admin123</b></p>
+      </form>
+      <form id="registerForm" class="d-none">
+        <label class="form-label">Full name</label>
+        <input class="form-control mb-3" id="regName" required placeholder="Your name">
+        <label class="form-label">Username</label>
+        <input class="form-control mb-3" id="regUsername" required placeholder="Choose a username">
+        <label class="form-label">Password</label>
+        <input class="form-control mb-3" id="regPassword" type="password" minlength="4" required placeholder="At least 4 characters">
+        <button class="btn btn-danger w-100 py-2" type="submit">Create account</button>
+      </form>
+      <div id="authMessage" class="small mt-3" role="status"></div>
+    </div>
+  </section>
+
+  <!-- Main application -->
+  <div id="appShell" class="d-none">
+    <aside class="sidebar" id="sidebar">
+      <a class="side-brand" href="#"><span class="brand-mark small-mark"><i class="bi bi-droplet-fill"></i></span><span>LifeLine</span></a>
+      <div class="side-caption">WORKSPACE</div>
+      <button class="nav-link active" data-page="dashboard"><i class="bi bi-grid-1x2"></i> Dashboard</button>
+      <button class="nav-link" data-page="donors"><i class="bi bi-people"></i> Donor records</button>
+      <button class="nav-link" data-page="requests"><i class="bi bi-clipboard2-heart"></i> Blood requests</button>
+      <button class="nav-link" data-page="donation-history">
+    <i class="bi bi-heart-pulse"></i> Donation History
+</button>
+      <button class="nav-link" data-page="reports"><i class="bi bi-bar-chart"></i> Reports</button>
+      <div class="sidebar-bottom">
+        <div class="help-note"><i class="bi bi-heart-pulse"></i><div><b>Every drop counts</b><small>Keep donor details organised.</small></div></div>
+        <button class="nav-link logout-link" id="logoutBtn"><i class="bi bi-box-arrow-left"></i> Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="btn btn-light d-lg-none" id="menuBtn"><i class="bi bi-list"></i></button>
+        <div><span class="top-kicker">DONOR CARE PORTAL</span><div class="fw-semibold">Blood Donor Management</div></div>
+        <div class="ms-auto d-flex align-items-center gap-2"><div class="user-avatar">A</div><div class="small"><b id="loggedUser">Admin</b><div class="text-secondary">Administrator</div></div></div>
+      </header>
+
+      <div class="content-wrap">
+        <section id="dashboardPage" class="page-section">
+          <div class="page-heading">
+            <div><p class="eyebrow">OVERVIEW</p><h2>Dashboard</h2><p class="text-secondary mb-0">A quick look at the donor database.</p></div>
+            <button class="btn btn-danger" id="quickAddBtn"><i class="bi bi-plus-lg me-1"></i> Add donor</button>
+          </div>
+          <div class="row g-3 mt-2">
+            <div class="col-6 col-xl-3"><div class="stat-card"><div class="stat-icon red"><i class="bi bi-people"></i></div><div class="stat-label">Total donors</div><div class="stat-number" id="totalDonors">0</div><div class="stat-foot">Registered donor records</div></div></div>
+            <div class="col-6 col-xl-3"><div class="stat-card"><div class="stat-icon rose"><i class="bi bi-droplet"></i></div><div class="stat-label">A+ donors</div><div class="stat-number" id="aPositive">0</div><div class="stat-foot">Blood group A positive</div></div></div>
+            <div class="col-6 col-xl-3"><div class="stat-card"><div class="stat-icon green"><i class="bi bi-check-circle"></i></div><div class="stat-label">Available donors</div><div class="stat-number" id="availableDonors">0</div><div class="stat-foot">Marked as available</div></div></div>
+            <div class="col-6 col-xl-3"><div class="stat-card"><div class="stat-icon amber"><i class="bi bi-calendar-heart"></i></div><div class="stat-label">Blood groups</div><div class="stat-number" id="groupCount">0</div><div class="stat-foot">Different groups recorded</div></div></div>
+            <div class="col-6 col-xl-3"><div class="stat-card"><div class="stat-icon rose"><i class="bi bi-clipboard2-pulse"></i></div><div class="stat-label">Open requests</div><div class="stat-number" id="openRequests">0</div><div class="stat-foot">Requests awaiting action</div></div></div>
+          </div>
+          <div class="row g-3 mt-1">
+            <div class="col-lg-7"><div class="panel-card h-100"><div class="panel-heading"><div><h5>Recent donor records</h5><p>Latest entries in the system</p></div><button class="btn btn-sm btn-outline-danger" data-goto="donors">View all</button></div><div class="table-responsive"><table class="table align-middle"><thead><tr><th>Donor</th><th>Blood group</th><th>City</th><th>Status</th></tr></thead><tbody id="recentDonors"></tbody></table></div></div></div>
+            <div class="col-lg-5"><div class="panel-card h-100"><div class="panel-heading"><div><h5>Donors by blood group</h5><p>Distribution in current records</p></div></div><div id="bloodGroupSummary" class="group-summary"></div></div></div>
+          </div>
+          <div class="panel-card mt-3"><div class="panel-heading"><div><h5>Recent blood requests</h5><p>Requests that may need follow-up</p></div><button class="btn btn-sm btn-outline-danger" data-goto="requests">Manage requests</button></div><div class="table-responsive"><table class="table align-middle"><thead><tr><th>Patient / requester</th><th>Blood group</th><th>Units</th><th>City</th><th>Urgency</th><th>Status</th></tr></thead><tbody id="recentRequests"></tbody></table></div></div>
+          <div class="disclaimer mt-3"><i class="bi bi-info-circle"></i><span>This project is a student management demo. Donor availability, blood compatibility and medical eligibility must be confirmed by authorised medical staff before any donation.</span></div>
+        </section>
+
+        <section id="donorsPage" class="page-section d-none">
+          <div class="page-heading"><div><p class="eyebrow">DATABASE</p><h2>Donor records</h2><p class="text-secondary mb-0">Add, view, update, search and remove donor details.</p></div><button class="btn btn-danger" id="addDonorBtn"><i class="bi bi-plus-lg me-1"></i> Add new donor</button></div>
+          <div class="panel-card mt-4">
+            <div class="toolbar"><div class="search-box"><i class="bi bi-search"></i><input id="searchInput" class="form-control" placeholder="Search by name, phone, city or blood group"></div><select id="groupFilter" class="form-select filter-select"><option value="">All blood groups</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select><select id="statusFilter" class="form-select filter-select"><option value="">All statuses</option><option>Available</option><option>Unavailable</option></select></div>
+            <div class="table-responsive"><table class="table align-middle donor-table"><thead><tr><th>Donor details</th><th>Blood group</th><th>Contact</th><th>City</th><th>Last donation</th><th>Status</th><th>Actions</th></tr></thead><tbody id="donorTableBody"></tbody></table></div>
+            <div class="table-footer"><span id="recordCount">0 records</span><span>Showing saved donor information</span></div>
+          </div>
+        </section>
+
+        <section id="requestsPage" class="page-section d-none">
+          <div class="page-heading"><div><p class="eyebrow">REQUEST MANAGEMENT</p><h2>Blood requests</h2><p class="text-secondary mb-0">Record and track blood requirements from hospitals or requesters.</p></div><button class="btn btn-danger" id="addRequestBtn"><i class="bi bi-plus-lg me-1"></i> New request</button></div>
+          <div class="panel-card mt-4">
+            <div class="toolbar"><div class="search-box"><i class="bi bi-search"></i><input id="requestSearch" class="form-control" placeholder="Search requester, hospital, city or blood group"></div><select id="requestStatusFilter" class="form-select filter-select"><option value="">All request statuses</option><option>Open</option><option>In Progress</option><option>Fulfilled</option><option>Cancelled</option></select><select id="requestUrgencyFilter" class="form-select filter-select"><option value="">All priorities</option><option>Urgent</option><option>Normal</option></select></div>
+            <div class="table-responsive"><table class="table align-middle donor-table"><thead><tr><th>Requester / patient</th><th>Blood group</th><th>Units</th><th>Hospital / city</th><th>Required by</th><th>Priority</th><th>Status</th><th>Actions</th></tr></thead><tbody id="requestTableBody"></tbody></table></div>
+            <div class="table-footer"><span id="requestCount">0 requests</span><span>Update the status when the request progresses.</span></div>
+          </div>
+          <div class="disclaimer mt-3"><i class="bi bi-exclamation-circle"></i><span>Requests and donor records are administrative information only. The system does not confirm blood compatibility, donor eligibility, or availability in real time. Always verify through the hospital blood bank.</span></div>
+        </section>
+
+        <section id="reportsPage" class="page-section d-none">
+          <div class="page-heading"><div><p class="eyebrow">INSIGHTS</p><h2>Reports</h2><p class="text-secondary mb-0">A basic summary of the saved donor records.</p></div><button class="btn btn-outline-danger" id="exportBtn"><i class="bi bi-download me-1"></i> Export CSV</button></div>
+          <div class="row g-3 mt-2"><div class="col-md-6"><div class="panel-card"><h5>Blood group summary</h5><p class="text-secondary small">Number of donors in each group</p><div id="reportGroups" class="group-summary"></div></div></div><div class="col-md-6"><div class="panel-card"><h5>Availability summary</h5><p class="text-secondary small">Based on the status entered in donor records</p><div id="availabilitySummary"></div></div></div></div>
+          <div class="disclaimer mt-3"><i class="bi bi-shield-check"></i><span>CSV reports contain personal information. Store and share exported files carefully and only with permission.</span></div>
+        </section>
+
+<section id="donation-historyPage" class="page-section d-none">
+
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">DONATION RECORDS</p>
+            <h2>Donation History</h2>
+            <p class="text-secondary mb-0">
+                Record and view previous blood donations.
+            </p>
+        </div>
+    </div>
+
+    <div class="panel-card mt-3">
+        <h5>Record a Donation</h5>
+
+        <form id="donationForm">
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <label class="form-label">Select Donor</label>
+                    <select class="form-select" id="donationDonor" required>
+                        <option value="">Select donor</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Donation Date</label>
+                    <input type="date" class="form-control"
+                        id="donationDate" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Units Donated</label>
+                    <input type="number" class="form-control"
+                        id="donationUnits" min="1" value="1" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Hospital Name</label>
+                    <input type="text" class="form-control"
+                        id="donationHospital">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Notes</label>
+                    <textarea class="form-control"
+                        id="donationNotes" rows="2"></textarea>
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-danger">
+                        Save Donation
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <div class="panel-card mt-3">
+        <h5>Previous Donations</h5>
+
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Donor</th>
+                        <th>Donation Date</th>
+                        <th>Units</th>
+                        <th>Hospital</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="donationTableBody">
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            No donation records yet.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Add / edit donor modal -->
+  <div class="modal fade" id="donorModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content">
+      <div class="modal-header"><div><p class="eyebrow mb-1">DONOR INFORMATION</p><h5 class="modal-title" id="modalTitle">Add new donor</h5></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <form id="donorForm"><div class="modal-body"><input type="hidden" id="donorId">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="form-label">Full name *</label><input class="form-control" id="donorName" required maxlength="60"></div>
+          <div class="col-md-6"><label class="form-label">Phone number *</label><input class="form-control" id="donorPhone" required pattern="[0-9]{10}" maxlength="10" placeholder="10 digit mobile number"></div>
+          <div class="col-md-6"><label class="form-label">Email</label><input class="form-control" id="donorEmail" type="email" placeholder="name@example.com"></div>
+          <div class="col-md-6"><label class="form-label">Blood group *</label><select class="form-select" id="donorGroup" required><option value="">Select blood group</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
+          <div class="col-md-6"><label class="form-label">Age *</label><input class="form-control" id="donorAge" type="number" min="18" max="65" required></div>
+          <div class="col-md-6"><label class="form-label">City *</label><input class="form-control" id="donorCity" required></div>
+          <div class="col-md-6"><label class="form-label">Last donation date</label><input class="form-control" id="donorLastDate" type="date"></div>
+          <div class="col-md-6"><label class="form-label">Availability status *</label><select class="form-select" id="donorStatus" required><option>Available</option><option>Unavailable</option></select></div>
+          <div class="col-12"><label class="form-label">Address</label><textarea class="form-control" id="donorAddress" rows="2" placeholder="Area, street or locality"></textarea></div>
+        </div><p class="small text-secondary mt-3 mb-0">Fields marked * are required. This demo does not verify medical eligibility.</p>
+      </div><div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-danger">Save donor</button></div></form>
+    </div></div>
+  </div>
+  <div class="modal fade" id="requestModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content">
+      <div class="modal-header"><div><p class="eyebrow mb-1">BLOOD REQUIREMENT</p><h5 class="modal-title" id="requestModalTitle">New blood request</h5></div><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <form id="requestForm"><div class="modal-body"><input type="hidden" id="requestId">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="form-label">Patient / requester name *</label><input class="form-control" id="requesterName" required maxlength="60"></div>
+          <div class="col-md-6"><label class="form-label">Contact number *</label><input class="form-control" id="requesterPhone" required pattern="[0-9]{10}" maxlength="10" placeholder="10 digit mobile number"></div>
+          <div class="col-md-6"><label class="form-label">Required blood group *</label><select class="form-select" id="requestGroup" required><option value="">Select blood group</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
+          <div class="col-md-6"><label class="form-label">Units required *</label><input class="form-control" id="requestUnits" type="number" min="1" max="20" required value="1"></div>
+          <div class="col-md-6"><label class="form-label">Hospital / blood bank *</label><input class="form-control" id="requestHospital" required></div>
+          <div class="col-md-6"><label class="form-label">City *</label><input class="form-control" id="requestCity" required></div>
+          <div class="col-md-6"><label class="form-label">Required by date *</label><input class="form-control" id="requestDate" type="date" required></div>
+          <div class="col-md-6"><label class="form-label">Priority *</label><select class="form-select" id="requestUrgency" required><option>Normal</option><option>Urgent</option></select></div>
+          <div class="col-md-6"><label class="form-label">Request status *</label><select class="form-select" id="requestStatus" required><option>Open</option><option>In Progress</option><option>Fulfilled</option><option>Cancelled</option></select></div>
+          <div class="col-12"><label class="form-label">Additional notes</label><textarea class="form-control" id="requestNotes" rows="2" placeholder="Optional notes"></textarea></div>
+        </div><p class="small text-secondary mt-3 mb-0">Enter only test data in this student demo. Confirm every request with the relevant hospital.</p>
+      </div><div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-danger">Save request</button></div></form>
+    </div></div>
+  </div>
+  <div class="toast-container position-fixed bottom-0 end-0 p-3"><div id="appToast" class="toast text-bg-dark border-0" role="status"><div class="d-flex"><div class="toast-body" id="toastMessage">Saved</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div></div></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
