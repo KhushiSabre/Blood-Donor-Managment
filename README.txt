@@ -1,28 +1,35 @@
-# LifeLine - Blood Donor Management System
+Blood Donor Management System
 
-## Run in VS Code
-1. Extract this ZIP file.
-2. Open the `blood_donor_frontend` folder in VS Code.
-3. Open `index.html` with the Live Server extension, or double-click it in a browser.
-4. Demo login: username `admin`, password `admin123`.
+A web-based application developed to simplify blood donor management and blood request handling.
 
-## Included frontend features
-- Login and registration screens (browser demo only)
-- Dashboard with donor and open-request statistics
-- Add, view, update, delete donor records
-- Search donors by name, phone, city or blood group
-- Filter donors by blood group and availability
-- Store last donation date and donor availability status
-- Blood request management: create, view, update, delete
-- Record requested blood group, units, hospital, city, required date and urgency
-- Search and filter blood requests
-- Blood group and availability summaries
-- Export donor records to CSV
-- Responsive layout using Bootstrap
+Features
 
-## Important project notes
-This is the frontend prototype. It stores demo records in browser localStorage so the interface can be tested before connecting the Flask + MySQL backend. This is not secure authentication or central database storage. Do not enter real donor/patient information.
+- User Registration and Login
+- Add, Update and Delete Donor Records
+- Search and Filter Donors
+- Blood Request Management
+- Donor Availability Tracking
+- Donation History
+- Dashboard and Statistics
+- CSV Export
 
-The dashboard initially contains fictional sample donor records. Blood requests start empty. The donor/request data is only administrative. The system does not determine medical eligibility or guarantee blood compatibility. A hospital/blood bank must verify compatibility, eligibility and availability.
+Technologies Used
 
-Next step: replace localStorage operations with Flask API requests and store data in MySQL.
+- HTML, CSS, Bootstrap
+- JavaScript
+- Python Flask
+- MySQL
+
+How to Run
+
+1. Open the project in VS Code.
+2. Navigate to the backend folder.
+3. Activate the virtual environment.
+4. Install the required dependencies.
+5. Run "python app.py".
+6. Open the frontend in your browser.
+
+Project Details
+
+Project Type: B.Tech Academic Project
+Domain: Web Development
